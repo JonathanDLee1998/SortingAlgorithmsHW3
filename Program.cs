@@ -15,27 +15,26 @@ namespace SortingAlgorithms
             int[] arrSorted3 = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             Stopwatch stopwatch = new Stopwatch();
+
             stopwatch.Start();
-            InsetionSort(arr1);
+            InsertionSort(arrSorted1);
             stopwatch.Stop();
             Console.WriteLine($"Elapsed time for Insertion Sort: {stopwatch.ElapsedTicks}");
 
             stopwatch.Restart();
-            stopwatch.Start();
-            BubbleSort(arr2);
+            BubbleSort(arrSorted2);
             stopwatch.Stop();
             Console.WriteLine($"Elapsed time for Bubble Sort: {stopwatch.ElapsedTicks}");
 
             stopwatch.Restart();
-            stopwatch.Start();
-            SelectionSort(arr3);
+            SelectionSort(arrSorted3);
             stopwatch.Stop();
             Console.WriteLine($"Elapsed time for Selection Sort: {stopwatch.ElapsedTicks}");
 
-            Console.WriteLine("Please selecct a sorting algorithm");
-            Console.WriteLine("1: Bubble sort");
-            Console.WriteLine("2: Selection sort");
-            Console.WriteLine("3: Insertion sort");
+            Console.WriteLine("Please select a sorting algorithm");
+            Console.WriteLine("1: Bubble Sort");
+            Console.WriteLine("2: Selection Sort");
+            Console.WriteLine("3: Insertion Sort");
 
             string? userSelection = Console.ReadLine();
 
@@ -46,32 +45,140 @@ namespace SortingAlgorithms
             Student student5 = new Student("Bob5", 3.5);
 
             Student[] students = { student1, student2, student3, student4, student5 };
+
             switch (userSelection)
             {
                 case "1":
                     BubbleSort(students);
                     break;
                 case "2":
-                    //call selection sort method
+                    SelectionSort(students);
                     break;
                 case "3":
-                    //call insertion sort method
+                    InsertionSort(students);
                     break;
                 default:
-                    //none of the cases matched
+                    Console.WriteLine("Invalid selection");
                     break;
             }
+
             PrintArray(students);
+
+            int[] mergeArray = { 3, 2, 5, 6, 7, 4, 1, 0 };
+            MergeSort(mergeArray);
+            PrintArray(mergeArray);
         }
-        public static void BubbleSort(Student[] arrToSort)
+
+        public static void MergeSort(int[] arr)
         {
-            Student temp;
-            for (int i = 0; i < arrToSort.Length - 1; i++) // how many times we need to go though the unsorted array  
+            if (arr.Length <= 1) return;
+
+            int mid = arr.Length / 2;
+            int[] leftSubArray = new int[mid];
+            int[] rightSubArray = new int[arr.Length - mid];
+
+            for (int i = 0; i < mid; i++)
+            {
+                leftSubArray[i] = arr[i];
+            }
+
+            for (int i = mid; i < arr.Length; i++)
+            {
+                rightSubArray[i - mid] = arr[i];
+            }
+
+            MergeSort(leftSubArray);
+            MergeSort(rightSubArray);
+
+            Merge(arr, leftSubArray, rightSubArray);
+        }
+
+        public static void Merge(int[] arr, int[] left, int[] right)
+        {
+            int i = 0, j = 0, k = 0;
+            while (i < left.Length && j < right.Length)
+            {
+                if (left[i] <= right[j])
+                {
+                    arr[k++] = left[i++];
+                }
+                else
+                {
+                    arr[k++] = right[j++];
+                }
+            }
+
+            while (i < left.Length)
+            {
+                arr[k++] = left[i++];
+            }
+
+            while (j < right.Length)
+            {
+                arr[k++] = right[j++];
+            }
+        }
+
+        public static void PrintArray(int[] arr)
+        {
+            foreach (var item in arr)
+            {
+                Console.Write(item + " ");
+            }
+            Console.WriteLine();
+        }
+
+        public static void PrintArray(Student[] arr)
+        {
+            foreach (var item in arr)
+            {
+                Console.Write($"{item.name}: {item.gpa} ");
+            }
+            Console.WriteLine();
+        }
+
+        public static void InsertionSort(int[] arr)
+        {
+            for (int i = 1; i < arr.Length; i++)
+            {
+                int temp = arr[i];
+                int priorIndex = i - 1;
+
+                while (priorIndex >= 0 && arr[priorIndex] > temp)
+                {
+                    arr[priorIndex + 1] = arr[priorIndex];
+                    priorIndex--;
+                }
+
+                arr[priorIndex + 1] = temp;
+            }
+        }
+
+        public static void InsertionSort(Student[] arr)
+        {
+            for (int i = 1; i < arr.Length; i++)
+            {
+                Student temp = arr[i];
+                int priorIndex = i - 1;
+
+                while (priorIndex >= 0 && arr[priorIndex].gpa < temp.gpa)
+                {
+                    arr[priorIndex + 1] = arr[priorIndex];
+                    priorIndex--;
+                }
+
+                arr[priorIndex + 1] = temp;
+            }
+        }
+
+        public static void BubbleSort(int[] arrToSort)
+        {
+            int temp;
+            for (int i = 0; i < arrToSort.Length - 1; i++)
             {
                 for (int j = 0; j < arrToSort.Length - 1 - i; j++)
                 {
-                    // we need to swap  
-                    if (arrToSort[j].gpa < arrToSort[j + 1].gpa)
+                    if (arrToSort[j] > arrToSort[j + 1])
                     {
                         temp = arrToSort[j];
                         arrToSort[j] = arrToSort[j + 1];
@@ -81,15 +188,14 @@ namespace SortingAlgorithms
             }
         }
 
-        public static void BubbleSort(int[] arrToSort)
+        public static void BubbleSort(Student[] arrToSort)
         {
-            int temp;
-            for (int i = 0; i < arrToSort.Length - 1; i++) // how many times we need to go though the unsorted array  
+            Student temp;
+            for (int i = 0; i < arrToSort.Length - 1; i++)
             {
                 for (int j = 0; j < arrToSort.Length - 1 - i; j++)
                 {
-                    // we need to swap  
-                    if (arrToSort[j] > arrToSort[j + 1])
+                    if (arrToSort[j].gpa < arrToSort[j + 1].gpa)
                     {
                         temp = arrToSort[j];
                         arrToSort[j] = arrToSort[j + 1];
@@ -101,65 +207,57 @@ namespace SortingAlgorithms
 
         public static void SelectionSort(int[] arrToSort)
         {
-            // minIndex keeps track of the smallest index in each iteration  
-            // temp is used as temporary storage  
             int minIndex, temp;
 
-            // O(n) how many times we need to go though the unsorted array  
             for (int i = 0; i < arrToSort.Length; i++)
             {
-                minIndex = i; // set the minIdex equal to current smallest index  
-                for (int j = i; j < arrToSort.Length; j++) // loop through each element starting at i  
+                minIndex = i;
+                for (int j = i; j < arrToSort.Length; j++)
                 {
-                    // if the element is smaller than the current minIndex  
                     if (arrToSort[j] < arrToSort[minIndex])
                     {
-                        // swap  
                         minIndex = j;
                     }
                 }
 
-                // swap elements  
-                // swap current i (which is smallest position with the smallest/min element)  
                 temp = arrToSort[i];
                 arrToSort[i] = arrToSort[minIndex];
                 arrToSort[minIndex] = temp;
             }
         }
-        public static void PrintArray(int[] arr)
-        {
-            foreach (var item in arr)
-            {
-                Console.Write(item + " ");
-            }
-            Console.WriteLine();
-        }
-        public static void PrintArray(Student[] arr)
-        {
-            foreach (var item in arr)
-            {
-                Console.Write($"{item.name}: {item.gpa} ");
-            }
-            Console.WriteLine();
-        }
 
-        public static void InsetionSort(int[] arr)
+        public static void SelectionSort(Student[] arrToSort)
         {
-            for (int i = 1; i < arr.Length; i++)
-            {
-                int temp = arr[i];    // store the current element - as it might be overwritten
-                int priorIndex = i - 1; // start comparing with the element before the current element
+            int minIndex;
+            Student temp;
 
-                //if our prior element is greater than our stored element and we have not reached the end of the array
-                while (priorIndex >= 0 && arr[priorIndex] > temp)
+            for (int i = 0; i < arrToSort.Length; i++)
+            {
+                minIndex = i;
+                for (int j = i; j < arrToSort.Length; j++)
                 {
-                    arr[priorIndex + 1] = arr[priorIndex];
-                    priorIndex--;
+                    if (arrToSort[j].gpa > arrToSort[minIndex].gpa)
+                    {
+                        minIndex = j;
+                    }
                 }
 
-
-                arr[priorIndex + 1] = temp;
+                temp = arrToSort[i];
+                arrToSort[i] = arrToSort[minIndex];
+                arrToSort[minIndex] = temp;
             }
+        }
+    }
+
+    public class Student
+    {
+        public string name;
+        public double gpa;
+
+        public Student(string name, double gpa)
+        {
+            this.name = name;
+            this.gpa = gpa;
         }
     }
 }
